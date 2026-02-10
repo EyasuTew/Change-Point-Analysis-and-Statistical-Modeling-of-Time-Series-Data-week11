@@ -39,3 +39,5 @@ tornado==6.5.4
 traitlets==5.14.3
 tzdata==2025.3
 wcwidth==0.6.0
+flask
+flask-cors
