@@ -145,3 +145,202 @@ Feel free to customize:
 - Include screenshots of the main plots by adding image links (e.g. `![Price Trend](screenshots/price_trend.png)`)
 
 Let me know if you want a shorter version, more technical tone, or inclusion of badges / shields. Good luck with the submission today!
+
+
+
+
+
+
+
+Here are two clean, professional **README.md** files tailored for **Task 2** and **Task 3** of the 10 Academy Week 11 Challenge. You can place them in the appropriate folders or combine them into one main README if your repository structure is flat.
+
+### README for Task 2 (Bayesian Change Point Modeling)
+
+```markdown
+# Task 2 – Bayesian Change Point Detection  
+**10 Academy Week 11 Challenge – Brent Oil Prices**
+
+**Final Submission** — February 10, 2026
+
+## Objective
+
+Apply Bayesian change point analysis using PyMC to detect structural breaks in Brent oil log returns and associate them with major geopolitical, OPEC, and economic events.
+
+## Key Files
+
+```
+task2/
+├── notebooks/
+│   └── task2_change_point_model.ipynb      # Main analysis + PyMC model
+├── data/
+│   └── brent_cleaned.csv                   # Input from Task 1
+├── outputs/
+│   ├── change_points.json                  # Exported detected shifts (for Task 3)
+│   └── posterior_plots/                    # Saved figures (optional)
+└── README.md                               # This file
+```
+
+## How to Run
+
+1. **Prerequisites**
+
+   ```bash
+   pip install pymc arviz pandas numpy matplotlib seaborn
+   ```
+
+2. **Run the notebook**
+
+   ```bash
+   jupyter notebook notebooks/task2_change_point_model.ipynb
+   ```
+
+   - Adjust `data_path` if needed
+   - Sampling may take 5–60 minutes depending on hardware and subsample choice
+
+## Main Components Implemented
+
+- **Data**: Daily log returns (more stationary than raw prices)
+- **Model**: Single change point with DiscreteUniform prior on τ  
+  - Regime means μ₁, μ₂ (Normal priors)  
+  - Shared σ (HalfNormal)  
+  - Likelihood: Normal with switched mean
+- **Sampling**: NUTS (default) or Metropolis hybrid / subsampled data for speed
+- **Diagnostics**: R-hat, trace plots, effective sample size (ESS)
+- **Visualization**:
+  - Posterior of τ (change point location)
+  - Posterior distributions of μ₁, μ₂, difference
+  - Annotated log returns with detected change date
+- **Interpretation**:
+  - Most probable change date + credible interval
+  - Probabilistic statements (e.g. "92% prob. mean log return increased after shift")
+  - Association with events (2014 OPEC, 2020 COVID, 2022 Ukraine war)
+  - Quantitative impact example (mean shift + % change)
+
+## Key Results Summary (example – adapt to your run)
+
+- Detected regime shift around **2022-02/03**  
+  - Mean daily log return: -0.0005 → +0.0015  
+  - Probability of increase: ~92%  
+  - Likely linked to Russia-Ukraine invasion & sanctions
+
+- Earlier shift ~**2014-11** aligns with OPEC no-cut decision (collapse regime)
+
+## Limitations & Extensions
+
+- Single change point only (multiple points computationally expensive)
+- Log returns modeled (not raw prices)
+- **Future work**:
+  - Multiple change points (sequential construction)
+  - Student-t likelihood (fat tails)
+  - Volatility regime changes (separate σ₁/σ₂)
+  - Exogenous variables (VAR-style)
+
+## Outputs for Task 3
+
+- `change_points.json` – ready for dashboard (dates, means, probabilities, descriptions)
+
+Good luck with the final submission!
+```
+
+### README for Task 3 (Interactive Dashboard)
+
+```markdown
+# Task 3 – Interactive Brent Oil Dashboard  
+**10 Academy Week 11 Challenge – Final Submission**
+
+**Date:** February 10, 2026
+
+## Objective
+
+Build a full-stack dashboard to let stakeholders explore Brent oil prices, detected change points, and associated events interactively.
+
+## Technology Stack
+
+- **Backend**: Flask (simple REST API)
+- **Frontend**: React + Recharts (interactive charts)
+- **Data**: CSV/JSON from Tasks 1 & 2
+
+## Project Structure
+
+```
+dashboard/
+├── backend/
+│   ├── app.py
+│   ├── data/
+│   │   ├── brent_cleaned.csv
+│   │   ├── events.csv
+│   │   └── change_points.json
+│   └── requirements.txt
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx
+│   │   └── components/
+│   ├── public/
+│   └── package.json
+└── README.md
+```
+
+## Features Implemented
+
+- Date range filter (start/end date inputs)
+- Interactive price time series (Recharts LineChart)
+- Event vertical reference lines with click-to-highlight
+- Tooltip showing date, price, and event description
+- Clickable event list (highlight corresponding marker on chart)
+- Display of detected change points with quantitative impact
+- Responsive layout (works on desktop + mobile)
+
+## Setup Instructions
+
+### 1. Backend (Flask)
+
+```bash
+cd backend
+pip install -r requirements.txt
+python app.py
+```
+
+→ API runs on http://localhost:5000
+
+Endpoints:
+- `/api/prices?start=YYYY-MM-DD&end=YYYY-MM-DD`
+- `/api/events`
+- `/api/change-points`
+
+### 2. Frontend (React)
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+→ Opens at http://localhost:3000
+
+Make sure backend is running first.
+
+## Screenshots (include these in your submission)
+
+1. Full dashboard view with default date range
+2. Zoomed range + event highlight (click on event in list)
+3. Tooltip showing price + event description
+4. Change point summary section
+
+(Place actual screenshots in a `/screenshots/` folder or embed links in final report)
+
+## Notes & Limitations
+
+- Assumes backend on port 5000 (CORS enabled)
+- Data files must be present in `backend/data/`
+- No authentication / deployment (local development only)
+- Can be extended with: volatility overlay, more filters, export CSV, authentication
+
+## Deployment (optional – not required)
+
+```bash
+# Backend (e.g. Render, Railway, Heroku)
+# Frontend (Vercel, Netlify – set proxy or env var for API base URL)
+```
+```
+
+
